@@ -165,3 +165,19 @@ func TestPriorityQueue_Empty(t *testing.T) {
 		t.Errorf("expected more to be false on an empty queue")
 	}
 }
+
+func TestPriorityQueue_Variadic(t *testing.T) {
+	q := queue.New(queue.Min[int])
+	q.Push(2, 1, 3)
+	for _, expected := range []int{1, 2, 3} {
+		next, _ := q.Next()
+		if expected != next {
+			t.Errorf("expected %v; got %v", expected, next)
+		}
+	}
+	q.Push()
+	_, more := q.Next()
+	if more != false {
+		t.Errorf("expected queue to be empty")
+	}
+}

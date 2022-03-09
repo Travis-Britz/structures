@@ -23,16 +23,26 @@ func NewUsing[T any](slice []T, fn func(T, T) bool) *Priority[T] {
 	return q
 }
 
+// Priority implements a binary heap, sorted according to a comparison function.
 type Priority[T any] struct {
 	items   []T
 	compare func(T, T) bool
 }
 
-func (q *Priority[T]) Push(i T) {
-	q.items = append(q.items, i)
+// Push adds an item (or items) to the heap.
+func (q *Priority[T]) Push(item ...T) {
+	if len(item) != 1 {
+		for _, v := range item {
+			q.Push(v)
+		}
+		return
+	}
+	q.items = append(q.items, item[0])
 	q.percUp(len(q.items) - 1)
 }
 
+// Next removes the next item from the top of the heap.
+// If the heap was empty, more will be false and the next item will be the zero value of type T.
 func (q *Priority[T]) Next() (next T, more bool) {
 	if len(q.items) == 0 {
 		var zero T
@@ -44,6 +54,11 @@ func (q *Priority[T]) Next() (next T, more bool) {
 	q.items = q.items[:len(q.items)-1]
 	q.percDown(0)
 	return result, true
+}
+
+// Len returns the length of the queue.
+func (q *Priority[T]) Len() int {
+	return len(q.items)
 }
 
 func (q *Priority[T]) percUp(i int) {
