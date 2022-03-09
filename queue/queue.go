@@ -94,7 +94,7 @@ func (q *Priority[T]) percDown(i int) {
 }
 
 func (q *Priority[T]) heapify() {
-	for i := len(q.items) - 1; i >= 0; i-- {
+	for i := (len(q.items) - 1) / 2; i >= 0; i-- {
 		q.percDown(i)
 	}
 }
