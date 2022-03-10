@@ -1,12 +1,12 @@
-package queue_test
+package heap_test
 
 import (
 	"testing"
 
-	"github.com/Travis-Britz/structures/queue"
+	"github.com/Travis-Britz/structures/heap"
 )
 
-func TestPriorityQueue_MinHeap(t *testing.T) {
+func TestHeap_MinHeap(t *testing.T) {
 
 	tt := []struct {
 		given    []int
@@ -36,11 +36,11 @@ func TestPriorityQueue_MinHeap(t *testing.T) {
 	}
 
 	// smallest should come out first
-	compareFn := queue.Min[int]
+	compareFn := heap.Min[int]
 
 	for _, tt := range tt {
 		t.Run("", func(t *testing.T) {
-			q := queue.New(compareFn)
+			q := heap.New(compareFn)
 			for _, item := range tt.given {
 				q.Push(item)
 			}
@@ -57,7 +57,7 @@ func TestPriorityQueue_MinHeap(t *testing.T) {
 	}
 }
 
-func TestPriorityQueue_MaxHeap(t *testing.T) {
+func TestHeap_MaxHeap(t *testing.T) {
 
 	tt := []struct {
 		given    []int
@@ -87,11 +87,11 @@ func TestPriorityQueue_MaxHeap(t *testing.T) {
 	}
 
 	// smallest should come out first
-	compareFn := queue.Max[int]
+	compareFn := heap.Max[int]
 
 	for _, tt := range tt {
 		t.Run("", func(t *testing.T) {
-			q := queue.New(compareFn)
+			q := heap.New(compareFn)
 			for _, item := range tt.given {
 				q.Push(item)
 			}
@@ -108,7 +108,7 @@ func TestPriorityQueue_MaxHeap(t *testing.T) {
 	}
 }
 
-func TestPriorityQueue_NewUsing(t *testing.T) {
+func TestHeap_NewUsing(t *testing.T) {
 
 	tt := []struct {
 		given    []int
@@ -141,7 +141,7 @@ func TestPriorityQueue_NewUsing(t *testing.T) {
 		t.Run("", func(t *testing.T) {
 			given := make([]int, len(td.given))
 			copy(given, td.given)
-			q := queue.NewUsing(given, queue.Min[int])
+			q := heap.NewUsing(given, heap.Min[int])
 			for _, expected := range td.expected {
 				next, more := q.Next()
 				if !more {
@@ -155,8 +155,8 @@ func TestPriorityQueue_NewUsing(t *testing.T) {
 	}
 }
 
-func TestPriorityQueue_Empty(t *testing.T) {
-	q := queue.New(queue.Min[int])
+func TestHeapEmpty(t *testing.T) {
+	q := heap.New(heap.Min[int])
 	next, more := q.Next()
 	if next != 0 {
 		t.Errorf("expected zero value for next; got %v", next)
@@ -166,8 +166,8 @@ func TestPriorityQueue_Empty(t *testing.T) {
 	}
 }
 
-func TestPriorityQueue_Variadic(t *testing.T) {
-	q := queue.New(queue.Min[int])
+func TestHeapVariadicPush(t *testing.T) {
+	q := heap.New(heap.Min[int])
 	q.Push(2, 1, 3)
 	for _, expected := range []int{1, 2, 3} {
 		next, _ := q.Next()

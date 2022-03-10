@@ -1,21 +1,17 @@
-// Package queue implements a priority queue data structure using a binary heap.
-package queue
+// Package heap implements a binary heap.
+package heap
 
-import (
-	"golang.org/x/exp/constraints"
-)
-
-// New returns a new Priority queue using the comparison function fn.
-func New[T any](fn func(T, T) bool) *Priority[T] {
-	return &Priority[T]{compare: fn}
+// New returns a new heap using the comparison function fn.
+func New[T any](fn func(T, T) bool) *Heap[T] {
+	return &Heap[T]{compare: fn}
 }
 
-// NewUsing returns a new queue with the given slice as the underlying array.
+// NewUsing returns a new heap with the given slice as the underlying array.
 // Callers must not access slice again.
 // A zero-length slice with a high capacity may be provided to prevent Push from growing the array.
 // If the slice contains any elements, it will be heapified according to fn.
-func NewUsing[T any](slice []T, fn func(T, T) bool) *Priority[T] {
-	q := &Priority[T]{
+func NewUsing[T any](slice []T, fn func(T, T) bool) *Heap[T] {
+	q := &Heap[T]{
 		items:   slice,
 		compare: fn,
 	}
@@ -23,14 +19,14 @@ func NewUsing[T any](slice []T, fn func(T, T) bool) *Priority[T] {
 	return q
 }
 
-// Priority implements a binary heap, sorted according to a comparison function.
-type Priority[T any] struct {
+// Heap implements a binary heap, sorted according to a comparison function.
+type Heap[T any] struct {
 	items   []T
 	compare func(T, T) bool
 }
 
 // Push adds an item (or items) to the heap.
-func (q *Priority[T]) Push(item ...T) {
+func (q *Heap[T]) Push(item ...T) {
 	if len(item) != 1 {
 		for _, v := range item {
 			q.Push(v)
@@ -43,7 +39,7 @@ func (q *Priority[T]) Push(item ...T) {
 
 // Next removes the next item from the top of the heap.
 // If the heap was empty, more will be false and the next item will be the zero value of type T.
-func (q *Priority[T]) Next() (next T, more bool) {
+func (q *Heap[T]) Next() (next T, more bool) {
 	if len(q.items) == 0 {
 		var zero T
 		return zero, false
@@ -57,11 +53,11 @@ func (q *Priority[T]) Next() (next T, more bool) {
 }
 
 // Len returns the length of the queue.
-func (q *Priority[T]) Len() int {
+func (q *Heap[T]) Len() int {
 	return len(q.items)
 }
 
-func (q *Priority[T]) percUp(i int) {
+func (q *Heap[T]) percUp(i int) {
 	pi := (i - 1) / 2 // parent index
 	if q.compare(q.items[i], q.items[pi]) {
 		q.items[i], q.items[pi] = q.items[pi], q.items[i]
@@ -69,7 +65,7 @@ func (q *Priority[T]) percUp(i int) {
 	}
 }
 
-func (q *Priority[T]) percDown(i int) {
+func (q *Heap[T]) percDown(i int) {
 	left, right := i*2+1, i*2+2
 	last := len(q.items) - 1
 
@@ -93,18 +89,25 @@ func (q *Priority[T]) percDown(i int) {
 	}
 }
 
-func (q *Priority[T]) heapify() {
+func (q *Heap[T]) heapify() {
 	for i := (len(q.items) - 1) / 2; i >= 0; i-- {
 		q.percDown(i)
 	}
 }
 
 // Max is a comparison function that turns the queue into a Max Heap.
-func Max[T constraints.Ordered](before T, after T) bool {
+func Max[T ordered](before T, after T) bool {
 	return before > after
 }
 
 // Min is a comparison function that turns the queue into a Min Heap.
-func Min[T constraints.Ordered](before T, after T) bool {
+func Min[T ordered](before T, after T) bool {
 	return before < after
+}
+
+type ordered interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
+	~float32 | ~float64 |
+	~string
 }
