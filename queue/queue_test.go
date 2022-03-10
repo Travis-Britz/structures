@@ -23,8 +23,8 @@ func ExampleNewPriority() {
 	// c true
 	// b true
 	// a true
-	// false
-	// false
+	//  false
+	//  false
 
 }
 
