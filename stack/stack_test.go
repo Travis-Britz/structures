@@ -17,10 +17,14 @@ func ExampleStack_Push() {
 		fmt.Println(next, more)
 	}
 	fmt.Println(s.Pop())
+	fmt.Println(s.Pop())
+	fmt.Println(s.Pop())
 	// Output:
 	// 5 true
 	// 3 true
 	// 2 true
 	// 1 true
+	// 0 false
+	// 0 false
 	// 0 false
 }
