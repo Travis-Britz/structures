@@ -7,7 +7,7 @@ import (
 	"github.com/Travis-Britz/structures/queue"
 )
 
-func ExampleNewPriority() {
+func ExampleNewPriority_string() {
 	q := queue.NewPriority[string]()
 	q.Push("a", 1)
 	q.Push("b", 5)
@@ -25,7 +25,26 @@ func ExampleNewPriority() {
 	// a true
 	//  false
 	//  false
+}
 
+func ExampleNewPriority_float64() {
+	q := queue.NewPriority[float64]()
+	q.Push(1.1, 1)
+	q.Push(1.2, 5)
+	q.Push(1.3, 10)
+	fmt.Println("Len:", q.Len())
+	fmt.Println(q.Pop())
+	fmt.Println(q.Pop())
+	fmt.Println(q.Pop())
+	fmt.Println(q.Pop())
+	fmt.Println(q.Pop())
+	// Output:
+	// Len: 3
+	// 1.3 true
+	// 1.2 true
+	// 1.1 true
+	// 0 false
+	// 0 false
 }
 
 func TestNewPriority(t *testing.T) {
