@@ -191,7 +191,7 @@ func TestHeap_MaxHeap(t *testing.T) {
 	},
 	}
 
-	// smallest should come out first
+	// largest should come out first
 	compareFn := heap.Max[int]
 
 	for _, tt := range tt {
